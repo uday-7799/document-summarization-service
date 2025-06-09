@@ -31,7 +31,7 @@ document-summarization-service/
 ├── requirements.txt    # Python dependencies
 └── README.md           # Project info
 
-
+```
 
 ---
 
@@ -86,7 +86,7 @@ http://localhost:8000
 4. Response (summary) is displayed in the browser
 5. Errors (if any) are shown clearly to the user
 
-
+```
 
 ## 🧠 Design Approach & Implementation Details
 
