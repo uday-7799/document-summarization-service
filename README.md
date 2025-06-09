@@ -19,16 +19,15 @@ This is a simple, interactive **Document Summarization Web App** built using **F
 
 ## 🗂️ Project Structure
 
-Document_summarizer/
-├── main.py          # FastAPI backend
-├── summarize.py     # LLM logic + file parsing
-├── models.py        # Pydantic models and enums
+document-summarization-service/
+├── main.py             # FastAPI app entry
+├── summarize.py        # LLM logic + file parsing
+├── models.py           # Pydantic request/response models
 ├── templates/
-│ └── index.html     # Web UI (TailwindCSS + JS)
-├── .env             # API keys (not committed)
-├── requirements.txt # Python dependencies
-└── README.md        # You're reading it!
-
+│   └── index.html      # UI with TailwindCSS & JS
+├── .env                # API key file (not committed)
+├── requirements.txt    # Python dependencies
+└── README.md           # Project info
 
 
 
@@ -47,28 +46,34 @@ Document_summarizer/
 
 ## 🧑‍💻 Getting Started
 
-### 1. Clone the repo
-```bash
-git clone https://github.com/your-username/document-summarization-service.git
+# 1. Clone the repository
+git clone https://github.com/uday-7799/document-summarization-service.git
+cd document-summarization-service
 
-cd DOCUMENT_SUMMERIZER
-
-### 2. Create a .env file
-
+# 2. Create a .env file
+# Add your OpenRouter API key to a file named .env in the root directory
 OPEN_ROUTER_API_KEY=your_openrouter_api_key
 
-
-### 3. Install dependencies
-
+# 3. Install dependencies
 pip install -r requirements.txt
 
-
-### 4. Run the server
-
+# 4. Run the FastAPI server
 uvicorn main:app --reload
 
-
-###5. Visit the App
-# Open your browser and go to:
-
+# 5. Open your browser and visit
 http://localhost:8000
+
+
+## 🎬 Demo
+
+👉 [Click here to watch the demo video](./demo.mp4)
+
+
+## 🧠 How It Works
+
+```text
+1. User enters text or uploads a .txt, .pdf, or .docx file
+2. Text is extracted and a prompt is generated based on the selected style
+3. Prompt is sent to the DeepSeek model via OpenRouter API
+4. Response (summary) is displayed in the browser
+5. Errors (if any) are shown clearly to the user
