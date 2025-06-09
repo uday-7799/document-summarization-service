@@ -88,14 +88,14 @@ http://localhost:8000
 
 ## 🧠 How It Works
 
-```text
+
 1. User enters text or uploads a .txt, .pdf, or .docx file
 2. Text is extracted and a prompt is generated based on the selected style
 3. Prompt is sent to the DeepSeek model via OpenRouter API
 4. Response (summary) is displayed in the browser
 5. Errors (if any) are shown clearly to the user
 
-```
+
 
 ## 🧠 Design Approach & Implementation Details
 
