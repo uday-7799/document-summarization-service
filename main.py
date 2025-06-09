@@ -41,3 +41,11 @@ async def summarize_file(file: UploadFile, style: str = Form(...)) -> SummaryRes
 @app.get("/api/status")
 async def api_status():
     return JSONResponse({"status": "ok"})
+
+
+
+
+
+
+
+

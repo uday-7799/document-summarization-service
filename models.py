@@ -40,3 +40,11 @@ class SummaryResponse(BaseModel):
     """Standard response model"""
     summary: str
     error: Optional[str] = None
+
+
+
+
+
+
+
+    

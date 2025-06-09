@@ -89,3 +89,11 @@ def summarize_text(text: str, style: SummarizationStyle) -> SummaryResponse:
 
     except requests.exceptions.RequestException as e:
         return SummaryResponse(summary="", error=f"API error: {str(e)}")
+    
+
+
+
+
+
+
+    

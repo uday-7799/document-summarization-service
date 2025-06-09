@@ -83,3 +83,14 @@ http://localhost:8000
 3. Prompt is sent to the DeepSeek model via OpenRouter API
 4. Response (summary) is displayed in the browser
 5. Errors (if any) are shown clearly to the user
+
+
+
+## 🧠 Design Approach & Implementation Details
+
+The application was designed to be modular, lightweight, and easy to use. FastAPI was chosen for its speed and simplicity in building APIs. The frontend is built using HTML and TailwindCSS to create a responsive and clean UI. Users can enter text directly or upload supported file types 
+(`.txt`, `.pdf`, `.docx`). These files are processed using `PyPDF2` and `python-docx` to extract raw text.
+
+Based on the selected summarization style (Brief, Detailed, Bullet Points), a prompt is dynamically constructed and sent to the DeepSeek LLM via the OpenRouter API. The API response is parsed and displayed on the frontend using vanilla JavaScript. The project includes input validation, error handling, and environment configuration via `.env` for secure API key management.
+
+The entire solution is container-ready and follows a separation of concerns: frontend (template), backend logic (summarize.py), data models (models.py), and routing (main.py).
