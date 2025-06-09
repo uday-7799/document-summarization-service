@@ -19,7 +19,9 @@ This is a simple, interactive **Document Summarization Web App** built using **F
 
 ## 🗂️ Project Structure
 
+```text
 document-summarization-service/
+│
 ├── main.py             # FastAPI app entry
 ├── summarize.py        # LLM logic + file parsing
 ├── models.py           # Pydantic request/response models
