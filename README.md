@@ -46,22 +46,24 @@ document-summarization-service/
 
 ## 🧑‍💻 Getting Started
 
-# 1. Clone the repository
+### 1. Clone the repository
 git clone https://github.com/uday-7799/document-summarization-service.git
+
 cd document-summarization-service
 
-# 2. Create a .env file
-# Add your OpenRouter API key to a file named .env in the root directory
+### 2. Create a .env file
+#### Add your OpenRouter API key to a file named .env in the root directory
 OPEN_ROUTER_API_KEY=your_openrouter_api_key
 
-# 3. Install dependencies
+### 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Run the FastAPI server
+### 4. Run the FastAPI server
 uvicorn main:app --reload
 
-# 5. Open your browser and visit
+### 5. Open your browser and visit
 http://localhost:8000
+
 
 
 ## 🎬 Demo
