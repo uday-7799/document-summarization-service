@@ -16,7 +16,7 @@ if not api_key:
 
 # OpenRouter API and DeepSeek model details
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
-MODEL_NAME = "deepseek/deepseek-r1-0528:free"  # ✅ Updated to DeepSeek model
+MODEL_NAME = "deepseek/deepseek-r1-0528:free"  
 
 def extract_text_from_file(file_bytes: bytes, filename: str) -> str:
     """Extract text from PDF, DOCX, or plain text files."""

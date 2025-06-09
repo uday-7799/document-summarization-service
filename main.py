@@ -30,7 +30,6 @@ async def summarize_file(file: UploadFile, style: str = Form(...)) -> SummaryRes
     try:
         file_bytes = await file.read()
         text = extract_text_from_file(file_bytes, file.filename)
-        # Ensure style is properly converted to enum
         style_enum = SummarizationStyle(style.lower())
         return summarize_text(text, style_enum)
     except ValueError as e:
