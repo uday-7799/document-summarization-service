@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner {
+            border: 6px solid #e5e7eb;
+            border-top: 6px solid #7c3aed;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #6b7280 0%, #1e3a8a 100%);
+        }
+        .input-transition {
+            transition: all 0.3s ease;
+        }
+        .radio-glow:checked {
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+        }
+        .button-glow:hover {
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-6">
+    <div class="container max-w-4xl bg-white rounded-3xl shadow-2xl p-10 transform hover:scale-[1.02] transition-transform duration-300">
+        <h1 class="text-4xl font-extrabold text-center text-gray-900 mb-10 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">Text Summarizer</h1>
+        
+        <div class="input-section mb-10">
+            <div class="input-method flex justify-center space-x-8 mb-8">
+                <label class="flex items-center space-x-3 cursor-pointer group">
+                    <input type="radio" name="inputMethod" value="text" checked class="text-purple-600 focus:ring-purple-500 radio-glow h-5 w-5 input-transition">
+                    <span class="text-gray-800 font-semibold group-hover:text-purple-600 input-transition">Enter Text</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer group">
+                    <input type="radio" name="inputMethod" value="file" class="text-purple-600 focus:ring-purple-500 radio-glow h-5 w-5 input-transition">
+                    <span class="text-gray-800 font-semibold group-hover:text-purple-600 input-transition">Upload File</span>
+                </label>
+            </div>
+            
+            <div id="textInputContainer">
+                <textarea id="inputText" placeholder="Enter the text you want to summarize..." class="w-full min-h-[180px] p-5 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-300 bg-gray-50 text-gray-800 input-transition placeholder-gray-400"></textarea>
+            </div>
+            
+            <div id="fileInputContainer" class="hidden">
+                <input type="file" id="fileInput" class="file-input w-full p-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200 input-transition" accept=".txt,.pdf,.docx">
+            </div>
+        </div>
+        
+        <div class="style-options mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Summary Style:</h3>
+            <div class="flex justify-center space-x-8">
+                <label class="flex items-center space-x-3 cursor-pointer group">
+                    <input type="radio" name="style" value="brief" checked class="text-purple-600 focus:ring-purple-500 radio-glow h-5 w-5 input-transition">
+                    <span class="text-gray-800 group-hover:text-purple-600 input-transition">Brief</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer group">
+                    <input type="radio" name="style" value="detailed" class="text-purple-600 focus:ring-purple-500 radio-glow h-5 w-5 input-transition">
+                    <span class="text-gray-800 group-hover:text-purple-600 input-transition">Detailed</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer group">
+                    <input type="radio" name="style" value="bullets" class="text-purple-600 focus:ring-purple-500 radio-glow h-5 w-5 input-transition">
+                    <span class="text-gray-800 group-hover:text-purple-600 input-transition">Bullet Points</span>
+                </label>
+            </div>
+        </div>
+        
+        <button onclick="handleSubmit()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:from-purple-700 hover:to-blue-700 button-glow input-transition">Summarize Now</button>
+        
+        <div class="output-section mt-10 p-8 bg-gray-50 border border-gray-200 rounded-xl">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Summary:</h3>
+            <div id="summaryOutput" class="text-gray-700 leading-relaxed"></div>
+            <div id="errorOutput" class="text-red-500 font-medium mt-4"></div>
+        </div>
+    </div>
+    
+    <div id="loader" class="loader fixed inset-0 bg-black/60 flex flex-col items-center justify-center hidden z-50">
+        <div class="spinner"></div>
+        <p class="text-white font-semibold text-lg">Summarizing content...</p>
+    </div>
+    
+    <script>
+        // Toggle between text and file input
+        document.querySelectorAll('input[name="inputMethod"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const isFileInput = this.value === 'file';
+                document.getElementById('textInputContainer').classList.toggle('hidden', isFileInput);
+                document.getElementById('fileInputContainer').classList.toggle('hidden', !isFileInput);
+                
+                // Clear previous results
+                document.getElementById('summaryOutput').innerHTML = '';
+                document.getElementById('errorOutput').textContent = '';
+            });
+        });
+        
+        async function handleSubmit() {
+            const isFileUpload = document.querySelector('input[name="inputMethod"]:checked').value === 'file';
+            if (isFileUpload) {
+                const fileInput = document.getElementById('fileInput');
+                if (!fileInput.files.length) {
+                    document.getElementById('errorOutput').textContent = 'Please select a file';
+                    return;
+                }
+                
+                // Check file size (e.g., 5MB limit)
+                if (fileInput.files[0].size > 10 * 1024 * 1024) {
+                    document.getElementById('errorOutput').textContent = 'File size must be less than 10MB';
+                    return;
+                }
+            } else {
+                const text = document.getElementById('inputText').value;
+                if (!text.trim()) {
+                    document.getElementById('errorOutput').textContent = 'Please enter some text';
+                    return;
+                }
+            }
+            await submitForm(isFileUpload);
+        }
+        
+        async function submitForm(isFileUpload = false) {
+            const loader = document.getElementById('loader');
+            const outputDiv = document.getElementById('summaryOutput');
+            const errorDiv = document.getElementById('errorOutput');
+            
+            // Clear previous results and show loader
+            outputDiv.innerHTML = '';
+            errorDiv.textContent = '';
+            loader.style.display = 'flex';
+            
+            try {
+                let response;
+                
+                if (isFileUpload) {
+                    const fileInput = document.getElementById('fileInput');
+                    const style = document.querySelector('input[name="style"]:checked').value;
+                    
+                    if (!fileInput.files.length) {
+                        throw new Error('Please select a file');
+                    }
+                    
+                    const formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+                    formData.append('style', style);
+                    
+                    response = await fetch('/summarize/file', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    const text = document.getElementById('inputText').value;
+                    const style = document.querySelector('input[name="style"]:checked').value;
+                    
+                    if (!text.trim()) {
+                        throw new Error('Please enter some text');
+                    }
+                    
+                    response = await fetch('/summarize/text', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            text: text,
+                            style: style
+                        })
+                    });
+                }
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    errorDiv.textContent = result.error;
+                } else {
+                    // Format the output based on style
+                    const style = document.querySelector('input[name="style"]:checked').value;
+                    if (style === 'bullets') {
+                        outputDiv.innerHTML = result.summary.replace(/\n/g, '<br>');
+                    } else {
+                        outputDiv.textContent = result.summary;
+                    }
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message || 'An error occurred during summarization';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
